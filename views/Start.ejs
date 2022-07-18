@@ -1,0 +1,783 @@
+<% if (i==1){%>
+<div class="container">
+    <div class="row mt-5">
+        <div class=" m-auto">
+        <div class="card card-body"> 
+            <div id="status_msg" class ="s_msg" >
+                <%- include ("./partials/messages") %> 
+            </div>
+    <h1 class="text-center mb-3"><i class="fa-solid fa-file-invoice-dollar"></i></h1>
+    <p class="text-center mb-3">Добро пожаловать в систему управления объектами!</p>
+    <a href="/register" class="btn btn-primary btn-block mb-2">Зарегестрироваться</a>
+    <a href="/login" class="btn btn-secondary btn-block">Войти</a>
+        </div>
+        </div>
+        <div id="Dark/Light theme" style="position: relative">
+            <button onclick="darkMode()"><i class="fa-regular fa-lightbulb"></i></button>
+        </div>
+        <script>
+        function setCookie(name, value, options = {}) {
+    
+            options = {
+                path: '/',
+                ...options
+            };
+            
+            if (options.expires instanceof Date) {
+                options.expires = options.expires.toUTCString();
+            }
+            
+            let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            
+            for (let optionKey in options) {
+                updatedCookie += "; " + optionKey;
+                let optionValue = options[optionKey];
+                if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+                }
+            }
+            
+            document.cookie = updatedCookie;
+            }
+        function deleteCookie(name) {
+            setCookie(name, "", {
+                'max-age': -1
+            })
+            }
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+            }
+    
+    function darkMode() {
+        
+        let element = document.body;
+        element.classList.toggle("dark-mode");
+        if (document.body.classList[0]=="dark-mode"){
+            setCookie("screen_mode","dark",{maxAge:7200})
+        }
+        else {
+            setCookie("screen_mode","light",{maxAge:7200})
+        }
+        
+        e = document.getElementsByClassName("card")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+        e = document.getElementsByClassName("btn")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+    }
+    $(document).ready(function () {
+        if (getCookie('s_msg')){
+            $("#status_msg").html(getCookie('s_msg'));
+            deleteCookie('s_msg')
+        }
+        d_l=getCookie('screen_mode')
+        if (d_l=="dark"){
+            darkMode()
+        }
+
+    })
+</script>
+</div>
+    
+</div>
+
+
+<%} else if (i==2){%>  
+<div class="container">
+<div class="row mt-5">
+    <div class=" m-auto">
+    <div class="card card-body">
+        <h5 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Вход</h5>
+        <div id="status_msg" class ="s_msg" >
+            <%- include ("./partials/messages") %> 
+        </div>
+        <form action="/login" method="POST">
+            <div class="form-group">
+            <label for="email">Почта:</label>
+            <input type="email" id="email" autocomplete="username" name="email" class="form-control" placeholder="Ваша почта" />
+            </div>
+            <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" autocomplete="current-password" id="password" name="password" class="form-control" placeholder="Ваш пароль" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Войти</button>
+        </form>
+        <p class="lead mt-4">
+            Нету аккаунта? <a href="/register">Зарегистрируйтесь</a>
+        </p>
+    </div>
+    </div>
+    <div id="Dark/Light theme" style="position: relative">
+        <button onclick="darkMode()"><i class="fa-regular fa-lightbulb"></i></button>
+    </div>
+    <script>
+        function setCookie(name, value, options = {}) {
+    
+            options = {
+                path: '/',
+                ...options
+            };
+            
+            if (options.expires instanceof Date) {
+                options.expires = options.expires.toUTCString();
+            }
+            
+            let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+            
+            for (let optionKey in options) {
+                updatedCookie += "; " + optionKey;
+                let optionValue = options[optionKey];
+                if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+                }
+            }
+            
+            document.cookie = updatedCookie;
+            }
+        function deleteCookie(name) {
+            setCookie(name, "", {
+                'max-age': -1
+            })
+            }
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+            }
+    
+        function darkMode() {
+          let element = document.body;
+          element.classList.toggle("dark-mode");
+          if (document.body.classList[0]=="dark-mode"){
+            setCookie("screen_mode","dark",{maxAge:7200})
+        }
+        else {
+            setCookie("screen_mode","light",{maxAge:7200})
+        }
+           e = document.getElementsByClassName("card")
+            for (let i = 0;i<e.length;i++) {
+                e[i].classList.toggle("dark-mode");
+            }
+            e = document.getElementsByClassName("form-control")
+            for (let i = 0;i<e.length;i++) {
+                e[i].classList.toggle("dark-mode");
+            }
+            e = document.getElementsByClassName("btn")
+            for (let i = 0;i<e.length;i++) {
+                e[i].classList.toggle("dark-mode");
+            }
+        }
+        $(document).ready(function () {
+            if (getCookie('s_msg')){
+                $("#status_msg").html(getCookie('s_msg'));
+                deleteCookie('s_msg')
+            }
+            d_l=getCookie('screen_mode')
+            if (d_l=="dark"){
+                darkMode()
+            }
+    
+        })
+    </script>
+</div>
+
+</div>
+<%} else if (i==3){%>  
+<div class="container">
+<div class="row mt-5">
+    <div class=" m-auto">
+    <div class="card card-body" style="max-width: 666px;"> 
+    <h5 class="text-center mb-3">
+        <i class="fas fa-user-plus"></i> Регистрация
+    </h5>
+    <div id="status_msg" class ="s_msg" >
+        <%- include ("./partials/messages") %> 
+    </div>
+    <form action="/register" method="POST">
+        <div class="form-group">
+        <label for="name">Как к Вам обращаться? :</label>
+        <input
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Ф.И.О."
+            value="<%= typeof name != 'undefined' ? name : '' %>"
+        />
+        </div>
+        <div class="form-group">
+        <label for="email">Почта:</label>
+        <input
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="example@gmail.com"
+            value="<%= typeof email != 'undefined' ? email : '' %>"
+        />
+        </div>
+        <div class="form-group">
+        <label for="ocsName">Как будет называться Ваша СУО:</label>
+        <input
+            id="ocsName"
+            name="ocsName"
+            class="form-control"
+            placeholder="СУО "
+            value="<%= typeof ocsName != 'undefined' ? ocsName : '' %>"
+        />
+        </div>
+        <div class="form-group">
+        <label for="password">Пароль:</label>
+        <input type="password" autocomplete="new-password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="от 8 символов,1 буквы,1 цифры и 1 спецсимвола : @$!%*#?&"
+            value="<%= typeof password != 'undefined' ? password : '' %>"
+        />
+        </div>
+        <div class="form-group">
+        <label for="password2">Подтвердите Пароль:</label>
+        <input type="password" autocomplete="new-password"
+            id="password2"
+            name="password2"
+            class="form-control"
+            placeholder="от 8 символов,1 буквы,1 цифры и 1 спецсимвола : @$!%*#?&"
+            value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
+        />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+        Зарегистрироваться
+        </button>
+    </form>
+    <p class="lead mt-4">Уже есть аккаунт? <a href="/login">Войти</a></p>
+    </div>
+</div>
+<div id="Dark/Light theme" style="position: relative">
+    <button onclick="darkMode()"><i class="fa-regular fa-lightbulb"></i></button>
+</div>
+<script>
+    function setCookie(name, value, options = {}) {
+
+        options = {
+            path: '/',
+            ...options
+        };
+        
+        if (options.expires instanceof Date) {
+            options.expires = options.expires.toUTCString();
+        }
+        
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+        
+        for (let optionKey in options) {
+            updatedCookie += "; " + optionKey;
+            let optionValue = options[optionKey];
+            if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+            }
+        }
+        
+        document.cookie = updatedCookie;
+        }
+    function deleteCookie(name) {
+        setCookie(name, "", {
+            'max-age': -1
+        })
+        }
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+    function darkMode() {
+      let element = document.body;
+      element.classList.toggle("dark-mode");
+      if (document.body.classList[0]=="dark-mode"){
+        setCookie("screen_mode","dark",{maxAge:7200})
+    }
+    else {
+        setCookie("screen_mode","light",{maxAge:7200})
+    }
+       e = document.getElementsByClassName("card")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+        e = document.getElementsByClassName("form-control")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+        e = document.getElementsByClassName("btn")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+    }
+    $(document).ready(function () {
+        if (getCookie('s_msg')){
+            $("#status_msg").html(getCookie('s_msg'));
+            deleteCookie('s_msg')
+        }
+        d_l=getCookie('screen_mode')
+        if (d_l=="dark"){
+            darkMode()
+        }
+
+    })
+</script>
+</div>
+</div>
+
+<%} else if (i==4){ %> 
+<nav class="grey darken-3">
+<div class="nav-wrapper container">
+    <a href="#!" class="brand-logo center">Выбрать СУО</a>
+    <a href="#" data-target="mobile-demo" class="sidenav-trigger show-on-large"><i class="fas fa-bars"></i></a>
+    <ul class="sidenav" id="mobile-demo">
+    <li>
+        <button name="eUser" class="btn mbtn  btn-side">
+        Изменить данные аккаунта
+        </button>
+    </li>
+    <li><a href="/logout" class="btn btn-side">Выйти</a></li>
+    <li>
+        <form action="/deleteUser" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn hred btn-side">Удалить аккаунт</button>
+        </form>
+    </li>
+    </ul>
+</div>
+</nav>
+<div class="container">
+<div class="row mt-5">
+    <div class=" m-auto">
+    <div class="card card-body">
+        <h2 class="mt-4">Доступные СУО</h2>
+        <div id="status_msg" class ="s_msg" >
+            <%- include ("./partials/messages") %> 
+        </div>
+        <p class="lead mb-3" id="greetings">Добро пожаловать <%= user.name %>
+        </p>
+        <div id="eUser_m" class="modall" >
+            <div class="modall-content" style="width:30%">
+            <span id="eUser_c" class="closemodal">&times;</span>
+            <div class=" m-auto">
+                <div class="card card-body">
+            <h5 class="text-center mb-3">
+                <i class="fas fa-user-plus"></i> Изменить данные аккаунта
+            </h5>
+            <form id="eUser_f" name="eUser_f">
+                <div class="form-group">
+                <label for="name">Как к Вам обращаться? :</label>
+                <input type="name" id="name" name="name" class="form-control" placeholder="Ф.И.О."
+                    value="<%= typeof name != 'undefined' ? name : '' %>" />
+                </div>
+                <div class="form-group">
+                <label for="email">Почта:</label>
+                <input type="email"  autocomplete="username" id="email" name="email" class="form-control" placeholder="example@gmail.com"
+                    value="<%= typeof email != 'undefined' ? email : '' %>" />
+                </div>
+                <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" autocomplete="new-password" name="password" class="form-control"
+                    placeholder="от 8 символов,1 буквы,1 цифры и 1 спецсимвола : @$!%*#?&"
+                    value="<%= typeof password != 'undefined' ? password : '' %>" />
+                </div>
+                <div class="form-group">
+                <label for="password2">Подтвердите Пароль:</label>
+                <input type="password" autocomplete="new-password" id="password2" name="password2" class="form-control"
+                    placeholder="от 8 символов,1 буквы,1 цифры и 1 спецсимвола : @$!%*#?&"
+                    value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
+                </div>
+                <button type="submit" id="s_eUser" class="btn btn-primary btn-block">
+                Изменить
+                </button>
+            </form>
+            </div>
+            </div>
+            </div>
+        </div>
+        <button name="cOCS" class="btn mbtn  btn-float">
+            Создать новую СУО
+        </button>
+        <div id="cOCS_m" class="modall" >
+            <div class="modall-content" style="width:30%">
+            <span id="cOCS_c" class="closemodal">&times;</span>
+            <div class=" m-auto">
+                <div class="card card-body">
+            <div id="s_msg_cOCS">
+            </div>
+            <h5 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Создание своей СУО</h5>
+            <form action="#" onsubmit="requestHandler($(`#cOCS_n`)[0].value,'/createOCS','cOCS_m','SpecsT');return false">
+                <div class="form-group">
+                <label id="cOCS_n_label" for="ocsName">Название Вашей СУО</label>
+                <input value id="cOCS_n" name="ocsName"  class="form-control" placeholder="Название СУО" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Создать</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div id="eOCS_m" class="modall">
+        <div class="modall-content"  style="width:30%">
+            <span id="eOCS_c" class="closemodal">&times;</span>
+            <div class=" m-auto">
+            <div class="card card-body">
+            <div id="s_msg_eOCS">
+            </div>
+            <h5 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Изменить СУО</h5>
+            <form id="eOCS_f" value="" ids="" action="#" onsubmit="requestHandler($(`#eOCS_n`)[0].value,$(`#eOCS_f`)[0].attributes[1].value,'eOCS_m',$(`#eOCS_f`)[0].attributes[2].value);return false">
+            <div class="form-group">
+                <label id="eOCS_n_label" for="ocsName">Название Вашей СУО</label>
+                <input type="ocsName" value="" id="eOCS_n" name="ocsName" class="form-control" />
+            </div>
+            <button type="submit" class="btn sbtn btn-primary btn-block">Изменить</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+<table>    
+<tbody id="SpecsT">
+<input id="SpecsS" type="text" placeholder="Поиск..">
+    <% if(his_ocses.length>0) { %>
+            <% for(let i in his_ocses) { %>
+            <tr id="row_<%=ids[i]%>">                
+                <td><a href="/ocs/view/0/<%=ids[i]%>" id="n_<%=ids[i]%>">
+                    <%=his_ocses[i].name%>
+                    </a></td>
+                <td class="tdd">
+                    <%if(his_ocses[i].creator_id==user._id){ %>
+                    <button value="<%=his_ocses[i].name%>" name="eOCS" id="<%=ids[i]%>" 
+                        class="btn mbtn btn-float" title="Редактировать СУО" >
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </button>
+                    <form  action="#" onsubmit="requestHandler('','/ocs/deleteOCS/<%=ids[i]%>','dOCS','<%=ids[i]%>');return false">
+                        <button title="Удалить СУО"  type="submit" class="btn hred">
+                            <i class="fa-solid fa-house-fire"></i>
+                        </button>
+                    </form>
+                    <%} %>
+                    <form action="#" onsubmit="requestHandler('','/ocs/leaveOCS/<%=ids[i]%>','dOCS','<%=ids[i]%>');return false">
+                        <button title="Покинуть СУО" type="submit" class="btn hred">
+                            <i  class="fa-solid fa-house-circle-xmark"></i>
+                        </button>
+                    </form>
+                </td>                    
+            </tr>
+            <%} %>
+        <%} %>
+    </tbody>
+</table>  
+</div>
+</div>
+<div id="Dark/Light theme" style="position: relative">
+    <button onclick="darkMode()"><i class="fa-regular fa-lightbulb"></i></button>
+</div>
+<script>
+$.fn.serializeObject = function(){
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+function setCookie(name, value, options = {}) {
+
+    options = {
+        path: '/',
+        ...options
+    };
+    
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+    
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+        updatedCookie += "=" + optionValue;
+        }
+    }
+    
+    document.cookie = updatedCookie;
+    }
+function deleteCookie(name) {
+    setCookie(name, "", {
+        'max-age': -1
+    })
+    }
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+function darkMode() {
+    let element = document.body;
+    element.classList.toggle("dark-mode");
+    if (document.body.classList[0]=="dark-mode"){
+        setCookie("screen_mode","dark",{maxAge:7200})
+    }
+    else {
+        setCookie("screen_mode","light",{maxAge:7200})
+    }
+        e = document.getElementsByClassName("card")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+        e = document.getElementsByClassName("form-control")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+        e = document.getElementsByClassName("btn")
+        for (let i = 0;i<e.length;i++) {
+            e[i].classList.toggle("dark-mode");
+        }
+    }
+function editRow(id,n){
+$(`#n_${id}`).html(n)
+}
+function deleteRow(id){
+$(`#row_${id}`).remove();
+}
+function addRow(tableId,n,ids){
+    let tableRef = document.getElementById(tableId);
+    let newRow = tableRef.insertRow(-1);
+    let newText = `<tr>
+        <td><a href="/ocs/view/0/${ids}" id="n_${ids}">
+            ${n}
+            </a></td>
+        <td class="tdd">
+            <button value="${n}" name="eOCS" id="${ids}"
+                class="btn mbtn btn-float">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </button>
+            <form action="#" onsubmit="requestHandler('','/ocs/deleteOCS/${ids}','dOCS','${ids}');return false">
+                <button type="submit" class="btn hred">
+                    <i class="fa-solid fa-house-fire"></i>
+                </button>
+            </form>
+            <form action="#" onsubmit="requestHandler('','/ocs/leaveOCS/${ids}','dOCS','${ids}');return false">
+                <button title="Покинуть СУО" type="submit" class="btn hred">
+                    <i  class="fa-solid fa-house-circle-xmark"></i>
+                </button>
+            </form>
+        </td>
+    </tr>`;
+
+    newRow.innerHTML =newText; 
+    newRow.id=`row_${ids}`;
+    n_btn = $(`button[id='${ids}']`)[0];
+    n_btn.addEventListener("click", function () {
+        let modal;
+        let span;
+        if (n_btn.name == "eOCS") {
+        modal = document.getElementById("eOCS_m");
+        span = document.getElementById("eOCS_c");
+        $('#eOCS_f').attr('value', '/ocs/editOCS/' + n_btn.id);
+        $('#eOCS_f').attr('ids',  n_btn.id);
+        $('#eOCS_n').attr('value', n_btn.value);
+        }
+        $(`#${modal.id}`).fadeIn();
+        span.onclick = function () {
+            $(`#${modal.id}`).fadeOut();
+        }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                $(`#${modal.id}`).fadeOut();
+            }
+        }
+    })
+}
+function requestHandler(d,url,m,tableId) {
+    xhr = new XMLHttpRequest();
+    xhr.withCredentials = true; 
+    xhr.addEventListener("readystatechange", async function() {
+    if(this.readyState === 4) {
+        let ans=JSON.parse(xhr.responseText) ;
+        if (ans.msg[0]=="У"){   
+            if (m=="eUser_m"){
+                setCookie('s_msg',`<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${ans.msg}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>`,{'max-age': 60})    
+                window.location.replace(ans.redir)
+            }  
+            else{
+            $("#status_msg").html(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+                ${ans.msg}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>`)
+                if (m=="dOCS"){
+                    deleteRow(tableId)
+                }
+                else{
+                    $(`#${m}`).fadeOut(); 
+                    if (m=="cOCS_m"){
+                        addRow(tableId,ans.n,ans.ids)
+                    }
+                    else if (m=="eOCS_m"){
+                        editRow(tableId,ans.n)
+                    }                   
+                }
+            }
+        }
+        else{
+            if (ans.redir){
+                if (m=="eUser"){
+                    setCookie('s_msg',`<div class="alert alert-danger  alert-dismissible fade show" role="alert">
+                        ${ans.msg}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>`,{'max-age': 60})  
+                }
+                else if (m=="dOCS"){
+                setCookie('s_msg',`<div class="alert alert-danger  alert-dismissible fade show" role="alert">
+                    ${ans.msg}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>`,{'max-age': 60})                       
+                }
+                else{
+                    let t='';
+                    for (let x in ans.msg){
+                       t+= `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ${ans.msg[x]}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>`  
+                    }
+                    setCookie('s_msg',t,{'max-age': 60}) 
+                }
+
+                window.location.replace(ans.redir) 
+            }
+            else {
+                if (m=="dOCS"){
+                    $(`#${m}`).fadeOut();
+                    $("#status_msg").html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${ans.msg}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>`)
+                }
+                else{
+                    $(`#${m}`).fadeOut();
+                    for (let x in ans.msg){
+                        $("#status_msg").append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ${ans.msg[x]}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>`)
+                    }
+                }
+            }    
+        } 
+    }
+    }); 
+    if(m=="cOCS_m"){
+        xhr.open('POST', url, true);
+    }
+    else if (m=="eOCS_m" || m=="eUser_m" ){
+        xhr.open('PUT', url, true);
+    }
+    if (m=="dOCS"){
+        xhr.open('DELETE', url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send() 
+    }
+    else{
+        const ssend={d}
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(ssend))  
+    }
+       
+} 
+
+
+$(document).ready(function () {
+    $(document).on('submit', '#eUser_f', function() {
+    requestHandler($('#eUser_f').serializeObject(),'/editUser','eUser_m','');
+    return false;
+    });
+    if (getCookie('s_msg')){
+        $("#status_msg").html(getCookie('s_msg'));
+        deleteCookie('s_msg')
+    }
+    d_l=getCookie('screen_mode')
+    if (d_l=="dark"){
+        darkMode()
+    }
+    var btn = document.getElementsByClassName("mbtn");
+    for (let x = 0; x < btn.length; x++) {
+    btn[x].addEventListener("click", function () {
+        let modal;
+        let span;
+        if (btn[x].name == "eOCS") {
+        modal = document.getElementById("eOCS_m");
+        span = document.getElementById("eOCS_c");
+        $('#eOCS_f').attr('value', '/ocs/editOCS/' + btn[x].id);
+        $('#eOCS_f').attr('ids',  btn[x].id);
+        $('#eOCS_n').attr('value', btn[x].value);
+        $('#eOCS_n')[0].value=btn[x].value;
+        
+        }
+        else if (btn[x].name == "cOCS") {
+        modal = document.getElementById("cOCS_m");
+        span = document.getElementById("cOCS_c");
+        $('#cOCS_n')[0].value='';
+        }
+        else if (btn[x].name == "eUser") {
+        modal = document.getElementById("eUser_m");
+        span = document.getElementById("eUser_c");
+        }
+        $(`#${modal.id}`).fadeIn();
+        span.onclick = function () {
+            $(`#${modal.id}`).fadeOut();
+        }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                $(`#${modal.id}`).fadeOut();
+            }
+        }
+    });
+    }
+});
+
+</script>
+</div>
+</div>    
+
+<%}%> 
+
+

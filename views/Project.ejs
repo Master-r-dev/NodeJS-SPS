@@ -1,0 +1,972 @@
+<%let ocsId= encrypt(project.ocsId);%> 
+<nav class="grey darken-3">
+    <div class="nav-wrapper container">
+        <a href="#!" class="brand-logo center">Объект <%=project.name%></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger show-on-large"><i class="fas fa-bars"></i></a>
+        <ul class="sidenav" id="mobile-demo">
+            <li><h6 class="mt-4" style="padding-left: 32px;word-wrap: break-word;white-space: initial;">
+                Описание объекта: <%=project.desc%> </h6></li>            
+            <li><a href="/ocs/view/0/<%=ocsId%>" >Вернуться в СУО</a></li>                       
+            <li><a href="/my_OCSes" >Выбрать СУО</a></li>
+            <li><a href="/logout">Выйти</a></li>
+        </ul>
+    </div>
+</nav>
+<% if (!user.l_roles[0]){%>
+    <%user.l_roles[0]=user.g_roles[0];%>
+<%}%> 
+
+    
+
+<div class="fixed-action-btn">
+<% if(user.g_roles[0].access[10]|| user.l_roles[0].access[10]) {%>
+    <a name="cR" id="cR_b" class="mbtn btn-floating btn-large waves-effect waves-light hgreen">
+        <i class="fas fa-users-cog"></i></a>  
+    <%}%> 
+<% if(user.g_roles[0].access[6] || user.l_roles[0].access[6]) {%>
+    <a name="aU" id="aU_b"  class="mbtn btn-floating btn-large waves-effect waves-light hgreen">
+        <i class="fas fa-user-tie"></i></a>
+    <%}%>
+</div>
+
+
+<div class="container">
+    <% if(user.g_roles[0].access[10]|| user.l_roles[0].access[10]) {%>
+        <div id="cR_m" class="modall">
+            <div class="modall-content" style="width:30%">
+                <span id="cR_c"class="closemodal">&times;</span>
+                <div class=" m-auto">
+                    <div class="card card-body">
+                <h5 class="text-center mb-3"><i class="fas fa-users-cog"></i>Создать роль для объекта</h5>
+                <div id="s_msg_cR" class ="s_msg">
+                </div>
+                <form id="cR_f">
+                    <div class="form-group">
+                        <label id="cR_n_label">Название роли (должно быть уникальным) :</label>
+                        <input id="cR_n" name="name" class="form-control" value="" />
+                    </div>
+                <div class="form-group ">
+                    <h7>Доступы роли</h7>         
+                    <select multiple id="cR_acc" name="access">
+                        <option value="" disabled selected>Может быть в данной СУО</option>
+                        <optgroup label="Управление объектом">
+                        <option value="3" > доступ к изменению объекта</option>
+                        <option value="4" >доступ к удалению объекта</option>
+                        </optgroup>
+                        <optgroup label="Управление пользователями">
+                        <option value="5" >доступ к просмотру пользователей в объекте</option>
+                        <option value="6" >доступ к добавлению пользователей в объекте</option>
+                        <option value="7" >доступ к изменению ролей пользователей в объекте</option>
+                        <option value="8" >доступ к удалению пользователей в объекте</option>
+                        </optgroup>
+                        <optgroup label="Управление ролями">
+                        <option value="9" >доступ к просмотру ролей в объекте</option>
+                        <option value="10" >доступ к добавлению ролей в объекте</option>
+                        <option value="11" >доступ к изменению ролей в объекте</option>
+                        <option value="12" >доступ к удалению ролей в объекте</option>
+                        </optgroup>
+                        <optgroup label="Управление спецификациями">
+                        <option value="13" >доступ к просмотру спецификаций в объекте</option>
+                        <option value="14" >доступ к добавлению спецификаций в объекте</option>
+                        <option value="15" >доступ к изменению спецификаций в объекте</option>
+                        <option value="16" >доступ к удалению спецификаций в объекте</option>
+                        <option value="17" >доступ к формированию счета на оплату</option>                        
+                        </optgroup>     
+                        </select>
+                    </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Создать
+                </button>
+                </form>
+            </div>
+        </div>
+        </div>
+        </div>
+    <%} %>
+    <% if(user.g_roles[0].access[6]|| user.l_roles[0].access[6]) {%>
+        <div id="aU_m" class="modall">
+            <div class="modall-content" style="width:30%">
+                <span id="aU_c"class="closemodal">&times;</span>
+                <div class=" m-auto">
+                    <div class="card card-body">
+                        <div id="s_msg_aU">
+                        </div>
+                <h5 class="text-center mb-3"><i class="fas fa-user-tie"></i>Добавление пользователя</h5>
+                <form id="aU_f">
+                    <div class="form-group">
+                      <label for="email">Почта:</label>
+                      <input
+                        type="email"  autocomplete="username" id="aU_email"
+                        name="email"
+                        class="form-control"
+                        placeholder="example@gmail.com"
+                        value=""
+                      />
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+     </div>
+    <%} %>
+<div id="status_msg" class ="s_msg" >
+    <%- include ("./partials/messages") %> 
+</div>
+<div class="row">
+<% if((user.g_roles[0].access[5] || user.l_roles[0].access[5]) && project.l_roles.length > 0) {%>
+<div class=" m-auto">
+<div class="card card-body center-align"> 
+<h3> Пользователи</h3>
+<input id="UsersS" type="text" placeholder="Поиск..">
+<table >            
+    <tbody id="UsersT">
+    <% for(let i=0; i < project.l_roles.length;i++) {%>
+        <% for(let j=0; j < project.l_roles[i].users.length;j++) {%>
+            <%let user_ids= encrypt(project.ocsId+' '+project._id+' '+project.l_roles[i].users[j]._id);%> 
+            <tr id="row_<%=user_ids%>">
+            <td><%=project.l_roles[i].users[j].name%></td>  <td id="r_<%=user_ids%>" value="r_<%=encrypt(project.ocsId+' '+project._id+' '+project.l_roles[i]._id)%>"  class="urole"><%=project.l_roles[i].name%></td>
+            <td>
+            <% if((user.g_roles[0].access[7] || user.l_roles[0].access[7]) 
+                    && (user._id.toString()==creator.toString()  || !admins.includes(project.l_roles[i].users[j]._id.toString()))
+                    && project.l_roles[i].users[j]._id.toString()!=user._id.toString()) {%>
+            <a name="eUR" id="<%=user_ids%>"
+                 value="<%=encrypt(project.ocsId+' '+project._id+' '+project.l_roles[i].id.toString())%>"
+                 data="<%=project.l_roles[i].users[j].name%>" class="mbtn  btn btn-float" title="Управление пользователем">
+                <i class="fa-solid fa-user-pen"></i></a>  
+            <%} %>
+            <% if((user.g_roles[0].access[8] || user.l_roles[0].access[8]) 
+                && (user._id.toString()==creator.toString()  || !admins.includes(project.l_roles[i].users[j]._id.toString()))
+                && project.l_roles[i].users[j]._id.toString()!=user._id.toString()) {%>
+            <form action="#" onsubmit="requestHandler('','/ocs/project/removeUser/8/<%=user_ids%>','rU');return false">
+                <button type="submit" class="btn hred " title="Удалить пользователя из объекта"><i class="fa-solid fa-user-xmark"></i></button>
+            </form> 
+            <%} %>
+            </td>
+    </tr>
+        <%} %>
+    <%} %>
+</tbody>
+</table>    
+</div>
+</div>
+<% if(user.g_roles[0].access[7] || user.l_roles[0].access[7])  {%>
+<div id="eUR_m" class="modall modall-eUR">
+    <div class="modall-content" style="width:30%">
+        <span id="eUR_c" class="closemodal">&times;</span>
+        <div class=" m-auto">
+        <div class="card card-body">
+            <div id="s_msg_eUR">
+            </div>
+            <h5 class="text-center mb-3">Изменить роль пользователя</h5>
+                <form id="eUR_f" >
+                <input type="hidden" name="old_lrole" id="eUR_ol">
+                <h6 id="eUR_u"></h6>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%} %>
+<%} %>
+<%if ((user.g_roles[0].access[9] || user.l_roles[0].access[9]) && project.l_roles.length > 0) {%>
+<div class=" m-auto">
+<div class="card card-body center-align"> 
+<h3>Роли в объекте</h3>
+<input id="RolesS" type="text" placeholder="Поиск..">
+<table >                
+    <tbody id="RolesT">
+    <% for(let i=0; i < project.l_roles.length;i++) {%>
+        <%let role_ids= encrypt(project.ocsId+' '+project._id+' '+project.l_roles[i]._id);%>
+        <tr id="row_<%=role_ids%>">
+        <td><a name="vR" id="n_<%=role_ids%>" 
+            value="<%=project.l_roles[i].access%>"
+             class="mbtn " title="Просмотреть роль"><%=project.l_roles[i].name%></a></td>
+        <td>
+        <% if((user.g_roles[0].access[11] || user.l_roles[0].access[11]) 
+        && project.l_roles[i].name!='admin'
+        && project.l_roles[i].name!='canEnter'
+        && project.l_roles[i].name!='banned') {%>
+            <a name="eR" id="<%=role_ids%>" 
+                value="<%=project.l_roles[i].access%>"
+                 data="<%=project.l_roles[i].name%>"
+                  class="mbtn  btn btn-float" title="Изменить роль">
+                <i class="fa-solid fa-gears"></i></a> 
+            <%} %>      
+        <% if((user.g_roles[0].access[12] || user.l_roles[0].access[12]) 
+        && project.l_roles[i].name!='admin' 
+        && project.l_roles[i].name!='canEnter' 
+        && project.l_roles[i].name!='banned') {%>
+            <form action="#" onsubmit="requestHandler('','/ocs/project/deleteRole/12/<%=role_ids%>','dR');return false">
+                <button type="submit" class="btn hred " title="Удалить роль"><i class="fa-solid fa-trash-can"></i></button>
+            </form>
+            <%} %> 
+        </td>
+    </tr>
+    <%} %>
+</tbody>
+</table>
+</div>
+</div>
+<div id="vR_m" class="modall" >
+<div class="modall-content" style="display: flex;flex-direction: row-reverse;">
+<span id="vR_c"class="closemodal">&times;</span>   
+<%if(user.g_roles[0].access[5] || user.l_roles[0].access[5]) {%>
+    <div class="card card-body ">
+        <h4>Пользователи</h4>
+        <input id="RUsersS" type="text" placeholder="Поиск..">
+        <table>
+            <tbody id="RUsersT">
+                <tr></tr>
+            </tbody>
+        </table>
+    </div>
+    <%} %>
+        <div class="card-body form-group" style="margin-left: 10px;">
+            <h5>Доступы роли в данном объекте</h5>
+            <select id="vR_accesses" name="access">
+            </select>
+        </div>
+</div>
+</div>    
+<%} %>
+<% if(user.g_roles[0].access[11]|| user.l_roles[0].access[11]) {%>
+<div id="eR_m" class="modall">
+    <div class="modall-content" style="width:30%">
+        <span id="eR_c" class="closemodal">&times;</span>
+        <div class=" m-auto">
+            <div class="card card-body">
+                <div id="s_msg_eR">
+                </div>
+                <h5 class="text-center mb-3">Изменить роль</h5>
+                <form id="eR_f">
+                    <div class="form-group">
+                        <label id="eR_n_label">Название роли (должно быть уникальным) :</label>
+                        <input  id="Rname" name="name"
+                            class="form-control" value="" />
+                    </div>
+                    <div class="form-group  ">   
+                        <h7>Доступы роли для данного объекта</h7>                     
+                        <select multiple id="eR_accesses" name="access">
+                        </select>
+                    </div>
+                    <button type="submit"  class="btn btn-primary btn-block">Изменить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%} %>
+
+<div id="Dark/Light theme" style="position: relative">
+    <button onclick="darkMode()"><i class="fa-regular fa-lightbulb"></i></button>
+</div>
+    </div>
+</div>
+<script src="/scripts/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  
+function setCookie(name, value, options = {}) {
+
+    options = {
+        path: '/',
+        ...options
+    };
+    
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+    
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+        updatedCookie += "=" + optionValue;
+        }
+    }
+    
+    document.cookie = updatedCookie;
+    }
+function deleteCookie(name) {
+    setCookie(name, "", {
+        'max-age': -1
+    })
+    }
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+
+function darkMode() {
+let element = document.body;
+element.classList.toggle("dark-mode");
+if (document.body.classList[0]=="dark-mode"){
+setCookie("screen_mode","dark",{maxAge:7200})
+}
+else {
+setCookie("screen_mode","light",{maxAge:7200})
+}
+e = document.getElementsByClassName("card")
+for (let i = 0;i<e.length;i++) {
+e[i].classList.toggle("dark-mode");
+}
+e = document.getElementsByClassName("form-control")
+for (let i = 0;i<e.length;i++) {
+e[i].classList.toggle("dark-mode");
+}
+e = document.getElementsByClassName("btn")
+for (let i = 0;i<e.length;i++) {
+e[i].classList.toggle("dark-mode");
+}
+e = document.getElementsByClassName("select-wrapper")
+for (let i = 0;i<e.length;i++) {
+e[i].classList.toggle("dark-mode");
+}
+e = document.getElementsByClassName("select-dropdown")
+for (let i = 0;i<e.length;i++) {
+e[i].classList.toggle("dark-mode");
+}
+}
+
+function editRow(tableId,obj){
+if (tableId[0]=="R"){ //editing role
+    $(`#n_${obj.id}`).html(obj.n)
+    $(`#n_${obj.id}`).attr("value",obj.acc)
+    $(`#${obj.id}`).attr("value",obj.acc)
+    $(`#UsersT td:contains('${obj.o_n}')`).each(function(){
+        jQuery(this)[0].innerHTML = obj.n;
+    });
+    $('#Rname').attr('value','')
+    $('#eR_accesses').children().remove()
+}
+if (tableId[0]=="U"){ //editing user
+    $(`#r_${obj.id}`).html(obj.r)
+    $(`#r_${obj.id}`).attr("value",'r_'+obj.nr_id ) 
+    if ($(`#n_${obj.nr_id}`)[0].innerHTML !== obj.r){
+        $(`#n_${obj.nr_id}`).html(obj.r)
+    }
+    $(`#${obj.id}`).attr("value",obj.nr_id)
+    if(document.getElementById("vR_m").style.display && document.getElementById("vR_m").style.display != "none"){                         
+        if (obj.nr_id !== obj.or_id) {
+            $(`#vR_row_${obj.id}`).remove();
+        }
+    }
+    else{
+        $("#RUsersT tr").remove();
+        $('#vR_accesses').children().remove()
+    }   
+    $(`#eUR_f_lr`).remove();
+    $('#submit_eUR').remove();    
+}
+}
+function deleteRow(id,k){
+    $(`#row_${id}`).remove();
+    $(`#vR_row_${id}`).remove();
+    $(`#lb_row_${id}`).remove();
+    if(k==1){
+        // change id in eUR to canEnter one
+        cE_id=$(`#RolesT a:contains("canEnter")`)[0].id.substring(2)
+        $(`#UsersT td[value='r_${id}']`).each(function(){
+            //change value to cE_id
+            jQuery(this)[0].innerHTML = "canEnter"; 
+            jQuery(this).attr("value",'r_'+cE_id )        
+        });
+        
+        $(`#UsersT a[value='${id}']`).each(function(){            
+            jQuery(this).attr("value",cE_id )     
+        });
+        
+    }
+}
+function addRow(tableId,obj){
+    let tableRef = document.getElementById(tableId);
+    let newRow;
+    let newText;
+    <% if(user.g_roles[0].access[10] || user.l_roles[0].access[10]) {%>
+    if (tableId[0]=="R"){ //adding role
+        if (!tableRef){
+            $(`.row`).eq(0).append(`<div class=" m-auto">
+                <div class="card card-body center-align"> 
+                <h3>Роли в СУО</h3>
+                <input id="RolesS" type="text" placeholder="Поиск..">
+                <table >                
+                <tbody id="RolesT"> 
+                </tbody>
+            </table>
+            </div>
+            </div>`)
+            $("#RolesS").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#RolesT tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            });
+        }
+        tableRef= document.getElementById(tableId);
+        newRow = tableRef.insertRow(-1);
+        newText = `<tr>
+            <td><a name="vR" id="n_${obj.id}"value="${obj.acc}" class="n_mbtn ">${obj.n}</a></td>
+            <td>`;
+        <% if(user.g_roles[0].access[11] || user.l_roles[0].access[11] ) {%>
+                newText += `<a name="eR" id="${obj.id}"
+                value="${obj.acc}"
+                class="n_mbtn  btn btn-float">
+                <i class="fa-solid fa-gears"></i></a>`;
+            <%} %>
+                <% if(user.g_roles[0].access[12]|| user.l_roles[0].access[12]) {%>
+                    newText += `
+                    <form action="#" onsubmit="requestHandler('','/ocs/project/deleteRole/12/${obj.id}','dR');return false">
+                        <button type="submit" class="btn hred "><i class="fa-solid fa-trash-can"></i></button>
+                    </form>`
+                    <%} %>
+        newText +=  `</td></tr>`;
+        
+    }
+    <%} %>
+    <% if(user.g_roles[0].access[6] || user.l_roles[0].access[6]) {%>
+    if (tableId[0]=="U"){ //adding user
+        if (!tableRef){
+            $(`.row`).eq(0).append(`<div class=" m-auto">
+                <div class="card card-body center-align">
+                <h3> Пользователи</h3>
+                <input id="UsersS" type="text" placeholder="Поиск..">
+                <table>
+                    <tbody id="UsersT">  
+                </tbody>
+            </table>
+            </div>
+            </div>`)
+            $("#UsersS").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#UsersT tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            });
+        }
+        tableRef= document.getElementById(tableId);
+        newRow = tableRef.insertRow(-1);
+        if ($(`#n_${obj.nr_id}`)[0].innerHTML !== obj.r){
+            $(`#n_${obj.nr_id}`).html(obj.r)
+        }
+        newText = `<tr>        
+        <td >${obj.n}</td>  <td id="r_${obj.id}" value="${obj.nr_id}" class="urole">${obj.r}</td>
+        <td>  `              
+            <% if(user.g_roles[0].access[7] || user.l_roles[0].access[7]) {%>
+            newText +=  `<a name="eUR" id="${obj.id}" data="${obj.n}" value="${obj.nr_id}"
+                class="n_mbtn btn btn-float"><i class="fa-solid fa-user-pen"></i></a>`
+            <%} %>
+            <% if(user.g_roles[0].access[8] || user.l_roles[0].access[8]) {%>
+            newText +=  `
+            <form action="#" onsubmit="requestHandler('','/ocs/project/removeUser/8/${obj.id}','rU');return false">
+                <button type="submit" class="btn hred "><i class="fa-solid fa-user-xmark"></i></button>
+            </form>`
+            <%} %>
+            newText+=`  </td>
+                 </tr>`
+        
+    }
+    <%} %>
+    newRow.innerHTML =newText; 
+    newRow.id=`row_${obj.id}`;
+    btnListener(2);
+}
+function requestHandler(d,url,m,tableId,s_msg) {
+    xhr = new XMLHttpRequest();
+    xhr.withCredentials = true; 
+    xhr.addEventListener("readystatechange", async function() {
+    if(this.readyState === 4) {
+        let ans=JSON.parse(xhr.responseText) ;
+            if (ans.msg[0]=="У"){     
+                $("#status_msg").html(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${ans.msg}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>`)
+                    if ( m=="dR" || m=="rU" || m=="dS"){
+                        deleteRow(ans.obj.id,ans.obj.k)
+                    }
+                    else{
+                        $(`#${m}`).fadeOut();   
+                        if ( m=="cR_m" ||  m=="aU_m"){
+                            addRow(tableId,ans.obj)
+                        }
+                        else if (m=="eR_m" || m=="eUR_m"){
+                            editRow(tableId,ans.obj)
+                        }
+                    }
+            }
+            else{
+                if (ans.redir){
+                    if ( m=="dR" || m=="rU" || m=="dS"){
+                    setCookie('s_msg',`<div class="alert alert-danger  alert-dismissible fade show" role="alert">
+                        ${ans.msg}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>`,{'max-age': 60})                       
+                    }
+                    else{
+                        let t='';
+                        for (let x in ans.msg){
+                            t+= `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                ${ans.msg[x]}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>`  
+                        }
+                        setCookie('s_msg',t,{'max-age': 60}) 
+                    }
+
+                    window.location.replace(ans.redir) 
+                }
+                else {
+                    if (m=="dR" || m=="rU" || m=="dS"){
+                        $("#status_msg").html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            ${ans.msg}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>`)
+                    }
+                    else{
+                        for (let x in ans.msg){
+                            $(`#${s_msg}`).append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                ${ans.msg[x]}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>`)
+                        }                            
+                    }
+                }    
+            }
+        }
+    }); 
+    if (m=="cR_m" || m=="aU_m"){
+        xhr.open('POST', url, true);
+    }
+    else if (m=="eR_m" || m=="eUR_m" ){
+        xhr.open('PUT', url, true);
+    }
+    if ( m=="dR" || m=="rU"|| m=="dS"){
+        xhr.open('DELETE', url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send() 
+    }
+    else{
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(d))  
+    }
+        
+} 
+
+
+$(document).ready(function () {
+    $(document).on('submit', '#cR_f', function() {
+    requestHandler($('#cR_f').serializeObject(),'/ocs/project/createRole/10/<%=encrypt(project.ocsId+' '+project._id)%>','cR_m','RolesT','s_msg_cR');
+    return false;
+    });
+    $(document).on('submit', '#aU_f', function() {
+    requestHandler($('#aU_f').serializeObject(),'/ocs/project/addUserIn/6/<%=encrypt(project.ocsId+' '+project._id)%>','aU_m','UsersT','s_msg_aU');
+    return false;
+    });
+    $(document).on('submit', '#eR_f', function() {
+    requestHandler($('#eR_f').serializeObject(),$('#eR_f').attr("value"),'eR_m','RolesT','s_msg_eR');
+    return false;
+    });
+    $(document).on('submit', '#eUR_f', function() {
+    requestHandler($('#eUR_f').serializeObject(),$('#eUR_f').attr("value"),'eUR_m','UsersT','s_msg_eUR');
+    return false;
+    });
+    if (getCookie('s_msg')){
+        $("#status_msg").html(getCookie('s_msg'));
+        deleteCookie('s_msg')
+    }
+    d_l=getCookie('screen_mode')
+    if (d_l=="dark"){
+        darkMode()
+    }
+    btnListener();   
+});
+function btnListener(x){
+    var btn;
+    if (x==2){
+        btn = document.getElementsByClassName("n_mbtn");
+    }
+    else{
+        btn = document.getElementsByClassName("mbtn");
+    }
+    for (let x = 0; x < btn.length; x++) {
+        if (btn[x].getAttribute('listener') !== 'true') {
+            btn[x].setAttribute('listener', 'true'); 
+            $(`#${btn[x].id}`).on("click", function () {                                 
+                let modal;
+                let span;
+                let s_idd;
+                if ($( this )[0].name == "cR") {
+                    modal = document.getElementById("cR_m");
+                    span = document.getElementById("cR_c");
+                    $('#cR_n')[0].value='';
+                }
+                <% if(user.g_roles[0].access[6] || user.l_roles[0].access[6]) {%>
+                if ($( this )[0].name == "aU") {
+                    modal = document.getElementById("aU_m");
+                    span = document.getElementById("aU_c");
+                    $('#aU_f').append(`<div id="aU_f_lr" class="form-group "> `);
+                    $(`#aU_f_lr`).append( `<h7>Локальная роль в этом объекте</h7> ` )     
+                    $(`#aU_f_lr`).append( `<select id="aU_lrole" name="lrole"> ` ) 
+                        <% for (let i = 0; i <  project.l_roles.length; i++){%>
+                            <%let o_r__id=encrypt(project.ocsId+' '+ project._id +' '+  project.l_roles[i]._id);%> 
+                            r = $(`#RolesT`).find(`a[id='n_<%=o_r__id%>']`)[0]
+                            if (r){
+                                $(`#aU_lrole`).append( `<option value="<%=o_r__id%>" >${r.innerHTML}</option>` )
+                            }                     
+                        <%} %>
+                    a=$(`.n_mbtn[name='vR']`);
+                    for (let i = 0; i < a.length; i++) {
+                        x=a[i].id
+                        x=x.substring(2)
+                        $(`#aU_lrole`).append( `<option value="${x}" >${a[i].innerHTML}</option>` ) 
+                    }
+                    $(`#aU_f_lr`).append( `</select> ` ) 
+                    $(`#aU_f_lr`).append( `</div>` ) 
+                    $('#aU_email')[0].value='';
+                    $('#aU_f').append(`<button id='submit_aU' type="submit" class="btn btn-primary btn-block">Создать</button>`);
+                    $(`#aU_lrole`).find(`option[value="${$(`#RolesT a:contains("canEnter")`)[0].id.substring(2)}"]`).attr("selected",'');
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems);
+                }
+                <%} %>
+                <%if (user.g_roles[0].access[9] || user.l_roles[0].access[9]) {%>
+                if ($( this )[0].name == "vR") {
+                    vR_b=$( this )[0]
+                    modal = document.getElementById("vR_m");
+                    span = document.getElementById("vR_c");
+                    if (document.getElementById('eUR_m')!=null){
+                        $("#RUsersT tr").remove();
+                        $('tr',"#UsersT").each(function () {
+                            let rowFromTable1 = $(this);
+                            let clonedRowFromTable1 = rowFromTable1.clone();                        
+                            if (clonedRowFromTable1[0].children[1].innerHTML == vR_b.innerHTML) {
+                                if(clonedRowFromTable1[0].children[2].children[0]) {
+                                clonedRowFromTable1[0].children[2].children[0].id ='vR_'+clonedRowFromTable1[0].children[2].children[0].id
+                                clonedRowFromTable1[0].children[1].id='vR_'+clonedRowFromTable1[0].children[1].id
+                                clonedRowFromTable1[0].id='vR_'+clonedRowFromTable1[0].id
+                                clonedRowFromTable1[0].children[2].children[0].setAttribute("vr_eur",'')
+                                }
+                                $('#RUsersT').append(clonedRowFromTable1)
+                            }
+                        })
+                    }  
+                    else {
+                        $("#RUsersT tr").remove();
+                        $('tr',"#UsersT").each(function () {
+                            let rowFromTable1 = $(this);
+                            let clonedRowFromTable1 = rowFromTable1.clone();
+                            if (clonedRowFromTable1[0].children[1].innerHTML == vR_b.innerHTML) {
+                                $('#RUsersT').append(clonedRowFromTable1)
+                            }                          
+                        })
+                    }                  
+                    if ($( this )[0].innerHTML == "banned") {
+                        $('#vR_accesses').append(`<option disabled selected>Нету доступов</option>`);
+                    } 
+                    else {
+                        $('#vR_accesses').append(`<option disabled selected>Может быть в данном объекте</option>`);
+                        $('#vR_accesses').append(`<optgroup label="Управление объектом">`);
+                        vRacc = $( this )[0].attributes[2].value.split(",");
+                        if (vRacc[3] == 'true') {
+                            $('#vR_accesses').append(`<option value="3" disabled >доступ к изменению объекта</option>`);
+                        }
+                        if (vRacc[4] == 'true') {
+                            $('#vR_accesses').append(`<option value="4" disabled >доступ к удалению объекта</option>`);
+                        }
+                        $('#vR_accesses').append(`</optgroup>`);
+                        $('#vR_accesses').append(`<optgroup label="Управление пользователями">`);
+                        if (vRacc[5] == 'true') {
+                            $('#vR_accesses').append(`<option value="5" disabled >доступ к просмотру пользователей</option>`);
+                        }
+                        if (vRacc[6] == 'true') {
+                            $('#vR_accesses').append(`<option value="6" disabled >доступ к добавлению пользователей</option>`);
+                        }
+                        if (vRacc[7] == 'true') {
+                            $('#vR_accesses').append(`<option value="7" disabled >доступ к изменению ролей пользователей</option>`);
+                        }
+                        if (vRacc[8] == 'true') {
+                            $('#vR_accesses').append(`<option value="8" disabled >доступ к удалению пользователей</option>`);
+                        }
+                        $('#vR_accesses').append(`</optgroup>`);
+                        $('#vR_accesses').append(`<optgroup label="Управление ролями">`);
+                        if (vRacc[9] == 'true') {
+                            $('#vR_accesses').append(`<option value="9" disabled >доступ к просмотру ролей</option>`);
+                        }
+                        if (vRacc[10] == 'true') {
+                            $('#vR_accesses').append(`<option value="10" disabled >доступ к добавлению ролей</option>`);
+                        }
+                        if (vRacc[11] == 'true') {
+                            $('#vR_accesses').append(`<option value="11" disabled >доступ к изменению ролей</option>`);
+                        }
+                        if (vRacc[12] == 'true') {
+                            $('#vR_accesses').append(`<option value="12" disabled >доступ к удалению ролей</option>`);
+                        }
+                        $('#vR_accesses').append(`</optgroup>`);
+                        $('#vR_accesses').append(`<optgroup label="Управление спецификациями">`);
+                        if (vRacc[13] == 'true') {
+                            $('#vR_accesses').append(`<option value="13" disabled >доступ к просмотру спецификаций</option>`);
+                        }
+                        if (vRacc[14] == 'true') {
+                            $('#vR_accesses').append(`<option value="14" disabled >доступ к добавлению спецификаций</option>`);
+                        }
+                        if (vRacc[15] == 'true') {
+                            $('#vR_accesses').append(`<option value="15" disabled >доступ к изменению спецификаций</option>`);
+                        }
+                        if (vRacc[16] == 'true') {
+                            $('#vR_accesses').append(`<option value="16" disabled >доступ к удалению спецификаций</option>`);
+                        }
+                        if (vRacc[17] == 'true') {
+                            $('#vR_accesses').append(`<option value="17" disabled >доступ к формированию счета на оплату</option>`);
+                        }                    
+                        $('#vR_accesses').append(`</optgroup>`);
+                        
+                    }
+                    <% if(user.g_roles[0].access[7] || user.l_roles[0].access[7]) { %>
+                    if (document.getElementById('eUR_m')!=null){
+                        u_btn = document.querySelectorAll("[vr_eur]");
+                        for (let x = 0; x < u_btn.length; x++) {
+                            $(`#${u_btn[x].id}`).on("click", function () {                           
+                                if ($( this )[0].name == "eUR") {                                
+                                    eUR_id=$( this )[0].id.substring(3)
+                                    q='/ocs/project/editUserRole/7/' + eUR_id;                                
+                                    $('#eUR_f').attr('value', q);
+                                    $('#eUR_u').html('Пользователь: '+ $( this )[0].attributes.data.value);
+                                    $('#eUR_ol').attr('value',$( this )[0].attributes.value.value);
+                                    lrolesHandler($( this )[0].attributes.value.value)                                
+                                        }
+                                    })
+                                }
+                            }
+                    <%} %>
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems);
+                    $('option').click(false);
+                }
+                <%} %>
+                <% if(user.g_roles[0].access[11] || user.l_roles[0].access[11]) { %>
+                if ($( this )[0].name == "eR") {
+                    modal = document.getElementById("eR_m");
+                    span = document.getElementById("eR_c");
+                    n=$(`#RolesT`).find(`a[id='n_${$( this )[0].id}']`)[0].innerHTML
+                    $('#Rname')[0].value=n;
+                    $('#Rname').attr('value', n);
+
+                    $('#eR_f').attr('value', '/ocs/project/editRole/11/' + $( this )[0].id);
+                    $('#eR_accesses').append(`<option disabled selected>Может быть в  в данном объекте</option>`);
+                    $('#eR_accesses').append(`<optgroup label="Управление объектом">`);
+                    eRacc = $( this )[0].attributes[2].value.split(",");
+                    if (eRacc[3] == 'true') {
+                        $('#eR_accesses').append(`<option value="3" selected >доступ к изменению объекта</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="3" >доступ к изменению объекта</option>`);
+                    }
+                    if (eRacc[4] == 'true') {
+                        $('#eR_accesses').append(`<option value="4" selected >доступ к удалению объекта</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="4" >доступ к удалению объекта</option>`);
+                    }
+                    $('#eR_accesses').append(`</optgroup>`);
+                    $('#eR_accesses').append(`<optgroup label="Управление пользователями">`);
+                    if (eRacc[5] == 'true') {
+                        $('#eR_accesses').append(`<option value="5" selected >доступ к просмотру пользователей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="5" >доступ к просмотру пользователей</option>`);
+                    }
+                    if (eRacc[6] == 'true') {
+                        $('#eR_accesses').append(`<option value="6" selected >доступ к добавлению пользователей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="6" >доступ к добавлению пользователей</option>`);
+                    }
+                    if (eRacc[7] == 'true') {
+                        $('#eR_accesses').append(`<option value="7" selected >доступ к изменению ролей пользователей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="7" >доступ к изменению ролей пользователей</option>`);
+                    }
+                    if (eRacc[8] == 'true') {
+                        $('#eR_accesses').append(`<option value="8" selected >доступ к удалению пользователей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="8" >доступ к удалению пользователей</option>`);
+                    }
+                    $('#eR_accesses').append(`</optgroup>`);
+                    $('#eR_accesses').append(`<optgroup label="Управление ролями">`);
+                    if (eRacc[9] == 'true') {
+                        $('#eR_accesses').append(`<option value="9" selected >доступ к просмотру ролей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="9" >доступ к просмотру ролей</option>`);
+                    }
+                    if (eRacc[10] == 'true') {
+                        $('#eR_accesses').append(`<option value="10" selected >доступ к добавлению ролей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="10" >доступ к добавлению ролей</option>`);
+                    }
+                    if (eRacc[11] == 'true') {
+                        $('#eR_accesses').append(`<option value="11" selected >доступ к изменению ролей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="11" >доступ к изменению ролей</option>`);
+                    }
+                    if (eRacc[12] == 'true') {
+                        $('#eR_accesses').append(`<option value="12" selected >доступ к удалению ролей</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="12" >доступ к удалению ролей</option>`);
+                    }
+                    $('#eR_accesses').append(`</optgroup>`);
+                    $('#eR_accesses').append(`<optgroup label="Управление спецификациями">`);
+                    if (eRacc[13] == 'true') {
+                        $('#eR_accesses').append(`<option value="13" selected >доступ к просмотру спецификаций</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="13" >доступ к просмотру спецификаций</option>`);
+                    }
+                    if (eRacc[14] == 'true') {
+                        $('#eR_accesses').append(`<option value="14" selected >доступ к добавлению спецификаций</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="14" >доступ к добавлению спецификаций</option>`);
+                    }
+                    if (eRacc[15] == 'true') {
+                        $('#eR_accesses').append(`<option value="15" selected >доступ к изменению спецификаций</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="15" >доступ к изменению спецификаций</option>`);
+                    }
+                    if (eRacc[16] == 'true') {
+                        $('#eR_accesses').append(`<option value="16" selected >доступ к удалению спецификаций</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="16" >доступ к удалению спецификаций</option>`);
+                    }
+                    if (eRacc[17] == 'true') {
+                        $('#eR_accesses').append(`<option value="17" selected >доступ к формированию счета на оплату</option>`);
+                    } else {
+                        $('#eR_accesses').append(`<option value="17" >доступ к формированию счета на оплату</option>`);
+                    }                
+                    $('#eR_accesses').append(`</optgroup>`);
+                    
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems);
+                }
+                <%} %>
+               
+                if (modal){
+                    $(`#${modal.id}`).fadeIn();
+                }     
+                <% if(user.g_roles[0].access[7] || user.l_roles[0].access[7]) { %>           
+                if ($( this )[0].name == "eUR") {     
+                    $('#eUR_f').attr('value', '/ocs/project/editUserRole/7/' + $( this )[0].id);
+                    $('#eUR_u').html('Пользователь: '+$( this )[0].attributes.data.value);
+                    $('#eUR_ol').attr('value',$( this )[0].attributes.value.value);
+                    lrolesHandler($( this )[0].attributes.value.value)
+                }
+                <%} %>
+                if (span ) {
+                if ($( this )[0].name !== "eUR") {
+                    let nnn=$( this )[0].name;                      
+                        span.onclick = function () {
+                            $(`#${modal.id}`).fadeOut();
+                            if ( nnn == "vR") {
+                                $("#RUsersT tr").remove();
+                                $('#vR_accesses').children().remove()
+                            }
+                             if( nnn == "eR"){
+                                $('#Rname').attr('value','')
+                                $('#eR_accesses').children().remove()
+                            }
+                             if ( nnn== "aU") {
+                                $(`#aU_f_lr`).remove();                             
+                                $('#submit_aU').remove();
+                            }
+                            
+                        }
+                        window.onclick = function (event) {
+                            if (event.target == modal) {
+                                $(`#${modal.id}`).fadeOut();
+                                if ( nnn == "vR") {
+                                    $("#RUsersT tr").remove();
+                                    $('#vR_accesses').children().remove()
+                                }
+                                 if( nnn== "eR"){
+                                    $('#Rname').attr('value','')
+                                    $('#eR_accesses').children().remove()
+                                }
+                                 if ( nnn == "aU") {
+                                    $(`#aU_f_lr`).remove();                             
+                                    $('#submit_aU').remove();
+                                }
+                            }   
+                            else if (event.target == document.getElementById("vR_m")) {
+                                $(`#vR_m`).fadeOut();
+                                $("#RUsersT tr").remove();
+                                $('#vR_accesses').children().remove()
+                                
+                            } 
+                        }
+                    }      
+                }
+                
+            });
+        }
+    }
+}
+<% if(user.g_roles[0].access[7] || user.l_roles[0].access[7]) { %>
+function lrolesHandler(old_lrole) {
+    let modal;
+    let span;
+    modal = document.getElementById("eUR_m");
+    span = document.getElementById("eUR_c");
+    $('#eUR_f').append(`<div id="eUR_f_lr" class="form-group "> `);
+    $(`#eUR_f_lr`).append( `<h7>Локальная роль в этом объекте</h7> ` )     
+    $(`#eUR_f_lr`).append( `<select id="eUR_lrole" name="lrole"> ` ) 
+    <% for (let i = 0; i <  project.l_roles.length; i++){%>
+        <%let o_r__id=encrypt(project.ocsId+' '+ project._id +' '+  project.l_roles[i]._id);%> 
+        r = $(`#RolesT`).find(`a[id='n_<%=o_r__id%>']`)[0]
+        if (r){
+            $(`#eUR_lrole`).append( `<option value="<%=o_r__id%>" >${r.innerHTML}</option>` )
+        }                     
+    <%} %>
+    a=$(`.n_mbtn[name='vR']`);
+    for (let i = 0; i < a.length; i++) {
+        x=a[i].id
+        x=x.substring(2)
+        $(`#eUR_lrole`).append( `<option value="${x}" >${a[i].innerHTML}</option>` ) 
+    }
+    $(`#eUR_f_lr`).append( `</select> ` ) 
+    $(`#eUR_f_lr`).append( `</div>` ) 
+    $('#eUR_f').append(`<button id="submit_eUR" type="submit" class="btn btn-primary btn-block">Изменить</button>`);
+    $(`#eUR_lrole`).find(`option[value="${old_lrole}"]`).attr("selected",'');
+    $(`#${modal.id}`).fadeIn();
+    span.onclick = function () {
+        $(`#${modal.id}`).fadeOut();
+        $(`#eUR_f_lr`).remove();                             
+        $('#submit_eUR').remove();     
+        
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            $(`#${modal.id}`).fadeOut();
+            $(`#eUR_f_lr`).remove();                             
+            $('#submit_eUR').remove();   
+            
+        }
+        else if (event.target == document.getElementById("vR_m")) {
+            $(`#vR_m`).fadeOut();
+            $("#RUsersT tr").remove();
+            $('#vR_accesses').children().remove()
+            
+        }   
+    }
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+} 
+<%} %>   
+</script>
